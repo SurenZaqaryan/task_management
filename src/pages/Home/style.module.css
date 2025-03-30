@@ -1,0 +1,27 @@
+.wrapper {
+  padding-top: 100px;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(110, 149, 160);
+}
+
+.toggle_signup_wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.toggle_signup_message_wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: rgb(240, 240, 240);
+}
+
+.toggle_signup_btn {
+  cursor: pointer;
+  color: white;
+  text-decoration: underline;
+}

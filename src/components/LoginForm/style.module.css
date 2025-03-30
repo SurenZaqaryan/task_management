@@ -1,0 +1,65 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.input_wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 20%;
+  min-width: 150px;
+  gap: 2px;
+}
+
+.password_input_wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  background-color: white;
+  padding-right: 10px;
+  border-radius: 4px;
+}
+
+.input_label {
+  margin-left: 10px;
+  font-size: 14px;
+  color: rgb(255, 255, 255);
+}
+
+.input {
+  outline: none;
+  border: none;
+  padding: 8px 10px;
+  font-size: 14px;
+  width: 100%;
+  border-radius: 4px;
+}
+
+.error_message {
+  font-weight: 300;
+  font-size: 14px;
+  color: rgb(218, 11, 11);
+  font-weight: 500;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva,
+    Verdana, sans-serif;
+}
+
+.login_btn {
+  outline: none;
+  padding: 10px 30px;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid white;
+  border-radius: 10px;
+  font-weight: 600;
+  color: rgb(255, 255, 255);
+  transition: 0.2s linear;
+}
+
+.login_btn:hover {
+  background: rgba(106, 246, 106, 60%);
+}

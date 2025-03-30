@@ -1,0 +1,98 @@
+.wrapper {
+  padding: 10px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.name_and_checkbox_wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.edit_and_delete_wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.is_completed_checkbox {
+  cursor: pointer;
+}
+
+.todo_name {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial,
+    sans-serif;
+  color: rgb(94, 94, 94);
+}
+
+.todo_name_edit_input {
+  color: rgb(94, 94, 94);
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial,
+    sans-serif;
+  outline: none;
+  border: 1px solid rgb(94, 94, 94);
+  padding: 2px 12px;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.delete_btn {
+  font-weight: 500;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 6px 12px;
+  color: rgb(55, 130, 134);
+  border: 1px solid rgb(55, 130, 134);
+  border-radius: 5px;
+  background-color: white;
+  transition: 0.2s ease;
+}
+
+.delete_btn:hover {
+  transform: scale(1.05);
+}
+
+.edit_btn {
+  transition: 0.2s ease;
+}
+
+.edit_btn:hover {
+  transform: scale(1.1);
+}
+
+.cancel_and_save_btns_wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-left: 10px;
+}
+
+.cancel_btn {
+  font-weight: 500;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 6px 12px;
+  color: red;
+  border: 1px solid red;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.save_btn {
+  font-weight: 500;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 6px 12px;
+  color: rgb(55, 130, 134);
+  border: 1px solid rgb(55, 130, 134);
+  border-radius: 5px;
+  background-color: white;
+}
