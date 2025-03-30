@@ -22,7 +22,7 @@ Search tasks
 
 🚀 Installation and Setup
 
-git clone https://github.com/your-repo/task-management.git  
+git clone https://github.com/SurenZaqaryan/task_management.git
 cd task-management  
 npm install  
 npm run dev
