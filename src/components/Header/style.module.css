@@ -32,10 +32,14 @@
   color: rgb(55, 130, 134);
   border: 1px solid rgb(55, 130, 134);
   font-weight: 600;
-  transition: 0.2s ease-out;
+  transition: 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
 }
 
-.logout_btn:active:hover {
+.logout_btn:hover {
   background-color: rgb(55, 130, 134);
   border: 1px solid white;
   color: white;

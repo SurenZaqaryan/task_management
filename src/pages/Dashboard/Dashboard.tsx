@@ -5,15 +5,13 @@ import styles from './style.module.css';
 
 function Dashboard() {
   return (
-    <div>
+    <>
       <Header />
-      <div className={styles.container}>
-        <div className={styles.wrapper}>
-          <AddTodoForm />
-          <TodosList />
-        </div>
+      <div className={styles.wrapper}>
+        <AddTodoForm />
+        <TodosList />
       </div>
-    </div>
+    </>
   );
 }
 

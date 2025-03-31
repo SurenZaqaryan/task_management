@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import styles from './style.module.css';
 import { RootState } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,8 +6,11 @@ import Todo from '../Todo/Todo';
 import { CiSearch } from 'react-icons/ci';
 import { getTodos } from '../../redux/todosSlice';
 import { ClipLoader, SyncLoader } from 'react-spinners';
+import Pagination from '../Pagination/Pagination';
+import Tabs from '../Tabs/Tabs';
 
 function TodosList() {
+  const GROUP_SIZE = 5;
   const [tab, setTab] = useState('all');
   const { todos } = useSelector((state: RootState) => state.todos);
   const { id: userID } = useSelector((state: RootState) => state.user.user);
@@ -17,88 +20,84 @@ function TodosList() {
   const [isLoading, setIsLoading] = useState(false);
   const [activePage, setActivePage] = useState(1);
   const [isPaginationLoading, setPaginationLoading] = useState(false);
+  const [isFirstRender, setIsFirstRender] = useState(true);
 
+  const isEmptyQuery = useMemo(() => {
+    return (debouncedQuery: string) => /^\s+$/.test(debouncedQuery);
+  }, []);
+
+  // setting debounced query effect
   useEffect(() => {
+    if (isFirstRender || isEmptyQuery(query)) {
+      return;
+    }
     setIsLoading(true);
 
     const timer = setTimeout(() => {
       setDebouncedQuery(query);
       setIsLoading(false);
-    }, 1500);
+    }, 1000);
 
     return () => clearTimeout(timer);
-  }, [query]);
+  }, [query, isFirstRender, isEmptyQuery]);
+
+  // get todos request
 
   useEffect(() => {
-    if (!/^\s+$/.test(debouncedQuery)) {
-      dispatch(getTodos({ userID, query: debouncedQuery }));
-    }
-  }, [debouncedQuery, dispatch, userID]);
+    dispatch(getTodos({ userID, query: debouncedQuery }));
+  }, [dispatch, userID, debouncedQuery]);
 
-  useEffect(() => {
-    dispatch(getTodos({ userID }));
-  }, [dispatch, userID]);
+  const startIndex = (activePage - 1) * GROUP_SIZE;
+  const endIndex = startIndex + GROUP_SIZE;
 
-  const groupSize = 5;
-  const startIndex = (activePage - 1) * groupSize;
-  const endIndex = startIndex + groupSize;
+  const filteredTodos = useMemo(() => {
+    return todos.filter((todo) => {
+      if (tab === 'all') {
+        return true;
+      } else if (tab === 'active') {
+        return todo.isCompleted === false;
+      } else {
+        return todo.isCompleted === true;
+      }
+    });
+  }, [todos, tab]);
 
-  const filteredTodos = todos.filter((todo) => {
-    if (tab === 'all') {
-      return true;
-    } else if (tab === 'active') {
-      return todo.isCompleted === false;
-    } else {
-      return todo.isCompleted === true;
-    }
-  });
-
-  const handleChangeActivePage = (page: number) => {
-    setPaginationLoading(true);
-
-    setTimeout(() => {
+  const handleChangeActivePage = useCallback(
+    (page: number) => {
+      if (activePage === page) return;
+      setPaginationLoading(true);
       setActivePage(page);
-      setPaginationLoading(false);
-    }, 1000);
-  };
 
-  const totalPages = Math.ceil(filteredTodos.length / groupSize);
+      setTimeout(() => {
+        setPaginationLoading(false);
+      }, 1000);
+    },
+    [activePage],
+  );
+
+  const handleChangeTab = useCallback((tab: string) => {
+    setTab(tab);
+    setQuery('');
+    setDebouncedQuery('');
+  }, []);
+
+  const totalPages = Math.ceil(filteredTodos.length / GROUP_SIZE);
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
     <div className={styles.container}>
       <div className={styles.tabs_wrapper}>
-        <div className={styles.tabs_container}>
-          <div
-            onClick={() => setTab('all')}
-            className={styles.tab}
-            style={{
-              color: tab === 'all' ? 'rgb(55, 130, 134)' : 'grey',
-            }}>
-            All
-          </div>
-          <div
-            onClick={() => setTab('active')}
-            className={styles.tab}
-            style={{
-              color: tab === 'active' ? 'rgb(55, 130, 134)' : 'grey',
-            }}>
-            Active
-          </div>
-          <div
-            onClick={() => setTab('completed')}
-            className={styles.tab}
-            style={{
-              color: tab === 'completed' ? 'rgb(55, 130, 134)' : 'grey',
-            }}>
-            Completed
-          </div>
-        </div>
+        <Tabs tab={tab} handleChangeTab={handleChangeTab} />
+
         <div className={styles.input_wrapper}>
           <input
             type="text"
+            placeholder="Search"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setIsFirstRender(false);
+            }}
             className={styles.search_input}
           />
           {isLoading ? (
@@ -115,35 +114,31 @@ function TodosList() {
           <div className={styles.loading_wrapper}>
             {
               // @ts-ignore
-              <SyncLoader color="rgb(55, 130, 134)" size={20} />
+              <SyncLoader color="rgb(55, 130, 134)" size={10} />
             }
           </div>
-        ) : (
+        ) : filteredTodos.length ? (
           filteredTodos.slice(startIndex, endIndex).map((todo) => {
-            // @ts-ignore
             return <Todo key={todo.id} todo={todo} />;
           })
+        ) : (
+          <div className={styles.no_todos_message_wrapper}>
+            {debouncedQuery ? (
+              <span className={styles.no_todos_message}>No todos with name - {debouncedQuery}</span>
+            ) : (
+              <span className={styles.no_todos_message}>No todos with status {tab}</span>
+            )}
+          </div>
         )}
       </div>
-      <div className={styles.page_numbers_wrapper}>
-        {pageNumbers.map((page) => {
-          return (
-            <div
-              style={{
-                color: activePage === page ? 'rgb(55, 130, 134)' : 'rgb(90, 90, 90)',
-                border:
-                  activePage === page ? '1px solid rgb(55, 130, 134)' : '1px solid rgb(90, 90, 90)',
-              }}
-              className={styles.page_number}
-              key={page}
-              onClick={() => handleChangeActivePage(page)}>
-              {page}
-            </div>
-          );
-        })}
-      </div>
+
+      <Pagination
+        pageNumbers={pageNumbers}
+        activePage={activePage}
+        handleChangeActivePage={handleChangeActivePage}
+      />
     </div>
   );
 }
 
-export default TodosList;
+export default memo(TodosList);

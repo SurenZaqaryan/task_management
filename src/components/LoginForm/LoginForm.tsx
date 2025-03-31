@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import styles from './style.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { login, removeErrors } from '../../redux/userSlice';
@@ -14,41 +14,50 @@ function LoginForm() {
   const [error, setError] = useState('');
   const { error: errorFromStore } = useSelector((state: RootState) => state.user);
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const handleLogin = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      setIsLoading(true);
 
-    if (!email) {
-      setError('The email cannot be empty!');
-      setIsLoading(false);
-      return;
-    }
+      if (!email) {
+        setError('The email cannot be empty!');
+        setIsLoading(false);
+        return;
+      }
 
-    if (!password) {
-      setError('The password cannot be empty!');
-      setIsLoading(false);
-      return;
-    }
+      if (!password) {
+        setError('The password cannot be empty!');
+        setIsLoading(false);
+        return;
+      }
 
-    setError('');
+      setError('');
 
-    setTimeout(() => {
-      dispatch(login({ email, password }));
-      setIsLoading(false);
-    }, 1000);
-  };
+      setTimeout(() => {
+        dispatch(login({ email, password }));
+        setIsLoading(false);
+      }, 1000);
+    },
+    [dispatch, email, password],
+  );
 
-  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setError('');
-    dispatch(removeErrors());
-    setEmail(e.target.value);
-  };
+  const handleChangeEmail = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setError('');
+      dispatch(removeErrors());
+      setEmail(e.target.value);
+    },
+    [dispatch],
+  );
 
-  const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setError('');
-    dispatch(removeErrors());
-    setPassword(e.target.value);
-  };
+  const handleChangePassword = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setError('');
+      dispatch(removeErrors());
+      setPassword(e.target.value);
+    },
+    [dispatch],
+  );
 
   return (
     <form className={styles.form} onSubmit={handleLogin}>

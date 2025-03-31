@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux';
 import { changeTodo, deleteTodo, toggleIsCompleted } from '../../redux/todosSlice';
 import { CiEdit } from 'react-icons/ci';
 import styles from './style.module.css';
-import { useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 
 type TodoType = {
   id: string;
@@ -16,19 +16,26 @@ function Todo({ todo }: { todo: TodoType }) {
   const dispatch = useDispatch();
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedName, setEditedName] = useState(name);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleDeleteTodo = () => {
+  useEffect(() => {
+    if (isEditMode && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isEditMode]);
+
+  const handleDeleteTodo = useCallback(() => {
     dispatch(deleteTodo({ id }));
-  };
+  }, [dispatch, id]);
 
-  const handleToggleIsCompleted = () => {
+  const handleToggleIsCompleted = useCallback(() => {
     dispatch(toggleIsCompleted({ id }));
-  };
+  }, [dispatch, id]);
 
-  const handleSaveChanges = () => {
+  const handleSaveChanges = useCallback(() => {
     dispatch(changeTodo({ id, newName: editedName }));
     setIsEditMode(false);
-  };
+  }, [dispatch, editedName, id]);
 
   return (
     <div className={styles.wrapper}>
@@ -41,6 +48,7 @@ function Todo({ todo }: { todo: TodoType }) {
         />
         {isEditMode ? (
           <input
+            ref={inputRef}
             type="text"
             value={editedName}
             onChange={(e) => setEditedName(e.target.value)}
@@ -82,4 +90,4 @@ function Todo({ todo }: { todo: TodoType }) {
   );
 }
 
-export default Todo;
+export default memo(Todo);

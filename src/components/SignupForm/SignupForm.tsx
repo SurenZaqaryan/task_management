@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { validateEmail } from '../../helpers/validateEmail';
 import { validatePassword } from '../../helpers/validatePassword';
 import { validateConfirmedPassword } from '../../helpers/validateConfirmedPassword';
@@ -18,41 +18,44 @@ function SignupForm() {
   const [error, setError] = useState('');
   const { error: errorFromStore } = useSelector((state: RootState) => state.user);
 
-  const handleSignup = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const handleSignup = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      setIsLoading(true);
 
-    if (name.trim().length <= 2) {
-      setError('The name must be longer than 2 characters.');
-      setIsLoading(false);
-      return;
-    }
+      if (name.trim().length <= 2) {
+        setError('The name must be longer than 2 characters.');
+        setIsLoading(false);
+        return;
+      }
 
-    if (!validateEmail(email)) {
-      setError('The email must be in a valid email format.');
-      setIsLoading(false);
-      return;
-    }
+      if (!validateEmail(email)) {
+        setError('The email must be in a valid email format.');
+        setIsLoading(false);
+        return;
+      }
 
-    if (!validatePassword(password)) {
-      setError('The password must be at least 8 characters long.');
-      setIsLoading(false);
-      return;
-    }
+      if (!validatePassword(password)) {
+        setError('The password must be at least 8 characters long.');
+        setIsLoading(false);
+        return;
+      }
 
-    if (!validateConfirmedPassword(password, confirmedPassword)) {
-      setError('The password and confirm password must match.');
-      setIsLoading(false);
-      return;
-    }
+      if (!validateConfirmedPassword(password, confirmedPassword)) {
+        setError('The password and confirm password must match.');
+        setIsLoading(false);
+        return;
+      }
 
-    setError('');
+      setError('');
 
-    setTimeout(() => {
-      dispatch(signup({ name, email, password, id: uuidv4() }));
-      setIsLoading(false);
-    }, 1000);
-  };
+      setTimeout(() => {
+        dispatch(signup({ name, email, password, id: uuidv4() }));
+        setIsLoading(false);
+      }, 1000);
+    },
+    [confirmedPassword, dispatch, email, password, name],
+  );
 
   return (
     <form className={styles.form} onSubmit={handleSignup}>
