@@ -2,6 +2,7 @@
 
 Task Management Application is a web application for task management that allows users to register, log in, create, edit and delete their tasks.
 
+Application URL - https://task-management-sage-alpha.vercel.app
 <!-- --------------------------------------------- -->
 
 ✨ Features
