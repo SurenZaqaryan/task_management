@@ -22,8 +22,8 @@ const TodosList: FC = () => {
   const [isPaginationLoading, setPaginationLoading] = useState(false);
   const [isFirstRender, setIsFirstRender] = useState(true);
 
-  const isEmptyQuery = useMemo(() => {
-    return (debouncedQuery: string) => /^\s+$/.test(debouncedQuery);
+  const isEmptyQuery = useCallback((debouncedQuery: string) => {
+    return /^\s+$/.test(debouncedQuery);
   }, []);
 
   // setting debounced query effect
