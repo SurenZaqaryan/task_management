@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux';
 import { changeTodo, deleteTodo, toggleIsCompleted } from '../../redux/todosSlice';
 import { CiEdit } from 'react-icons/ci';
 import styles from './style.module.css';
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useRef, useState } from 'react';
 
 type TodoType = {
   id: string;
@@ -11,7 +11,11 @@ type TodoType = {
   isCompleted: boolean;
 };
 
-function Todo({ todo }: { todo: TodoType }) {
+type TodoProps = {
+  todo: TodoType;
+};
+
+const Todo: FC<TodoProps> = ({ todo }) => {
   const { name, id, isCompleted } = todo;
   const dispatch = useDispatch();
   const [isEditMode, setIsEditMode] = useState(false);
@@ -88,6 +92,6 @@ function Todo({ todo }: { todo: TodoType }) {
       )}
     </div>
   );
-}
+};
 
 export default memo(Todo);

@@ -1,9 +1,9 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, FC } from 'react';
 import LoginForm from '../../components/LoginForm/LoginForm';
 import SignupForm from '../../components/SignupForm/SignupForm';
 import styles from './style.module.css';
 
-function Home() {
+const Home: FC = () => {
   const [onLoginTab, setOnLoginTab] = useState(true);
 
   const toggleTab = useCallback(() => setOnLoginTab((prev) => !prev), []);
@@ -21,6 +21,6 @@ function Home() {
       </div>
     </div>
   );
-}
+};
 
 export default Home;

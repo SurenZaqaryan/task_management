@@ -1,7 +1,7 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import styles from './style.module.css';
-import { RootState } from '../../redux/store';
-import { useDispatch, useSelector } from 'react-redux';
+import { RootState, useAppDispatch } from '../../redux/store';
+import { useSelector } from 'react-redux';
 import Todo from '../Todo/Todo';
 import { CiSearch } from 'react-icons/ci';
 import { getTodos } from '../../redux/todosSlice';
@@ -9,12 +9,12 @@ import { ClipLoader, SyncLoader } from 'react-spinners';
 import Pagination from '../Pagination/Pagination';
 import Tabs from '../Tabs/Tabs';
 
-function TodosList() {
+const TodosList: FC = () => {
   const GROUP_SIZE = 5;
   const [tab, setTab] = useState('all');
   const { todos } = useSelector((state: RootState) => state.todos);
   const { id: userID } = useSelector((state: RootState) => state.user.user);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -47,21 +47,6 @@ function TodosList() {
     dispatch(getTodos({ userID, query: debouncedQuery }));
   }, [dispatch, userID, debouncedQuery]);
 
-  const startIndex = (activePage - 1) * GROUP_SIZE;
-  const endIndex = startIndex + GROUP_SIZE;
-
-  const filteredTodos = useMemo(() => {
-    return todos.filter((todo) => {
-      if (tab === 'all') {
-        return true;
-      } else if (tab === 'active') {
-        return todo.isCompleted === false;
-      } else {
-        return todo.isCompleted === true;
-      }
-    });
-  }, [todos, tab]);
-
   const handleChangeActivePage = useCallback(
     (page: number) => {
       if (activePage === page) return;
@@ -81,8 +66,26 @@ function TodosList() {
     setDebouncedQuery('');
   }, []);
 
+  const filteredTodos = useMemo(() => {
+    return todos.filter((todo) => {
+      if (tab === 'all') {
+        return true;
+      } else if (tab === 'active') {
+        return todo.isCompleted === false;
+      } else {
+        return todo.isCompleted === true;
+      }
+    });
+  }, [todos, tab]);
+
+  const startIndex = (activePage - 1) * GROUP_SIZE;
+  const endIndex = startIndex + GROUP_SIZE;
   const totalPages = Math.ceil(filteredTodos.length / GROUP_SIZE);
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+
+  const todosToShow = useMemo(() => {
+    return filteredTodos.slice(startIndex, endIndex);
+  }, [startIndex, endIndex, filteredTodos]);
 
   return (
     <div className={styles.container}>
@@ -102,7 +105,7 @@ function TodosList() {
           />
           {isLoading ? (
             // @ts-ignore
-            <ClipLoader color="rgb(55, 130, 134)" size={20} />
+            <ClipLoader size={20} color="rgb(55, 130, 134)" />
           ) : (
             <CiSearch size={20} color="rgb(55, 130, 134)" />
           )}
@@ -114,11 +117,11 @@ function TodosList() {
           <div className={styles.loading_wrapper}>
             {
               // @ts-ignore
-              <SyncLoader color="rgb(55, 130, 134)" size={10} />
+              <SyncLoader size={10} color="rgb(55, 130, 134)" />
             }
           </div>
         ) : filteredTodos.length ? (
-          filteredTodos.slice(startIndex, endIndex).map((todo) => {
+          todosToShow.map((todo) => {
             return <Todo key={todo.id} todo={todo} />;
           })
         ) : (
@@ -139,6 +142,6 @@ function TodosList() {
       />
     </div>
   );
-}
+};
 
 export default memo(TodosList);

@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { FC, memo, useCallback } from 'react';
 import styles from './style.module.css';
 
 type PaginationProps = {
@@ -7,7 +7,14 @@ type PaginationProps = {
   handleChangeActivePage: (page: number) => void;
 };
 
-function Pagination({ pageNumbers, activePage, handleChangeActivePage }: PaginationProps) {
+const Pagination: FC<PaginationProps> = ({ pageNumbers, activePage, handleChangeActivePage }) => {
+  const handleClick = useCallback(
+    (page: number) => {
+      handleChangeActivePage(page);
+    },
+    [handleChangeActivePage],
+  );
+
   return (
     <div className={styles.page_numbers_wrapper}>
       {pageNumbers.map((page: number) => {
@@ -20,13 +27,13 @@ function Pagination({ pageNumbers, activePage, handleChangeActivePage }: Paginat
             }}
             className={styles.page_number}
             key={page}
-            onClick={() => handleChangeActivePage(page)}>
+            onClick={() => handleClick(page)}>
             {page}
           </div>
         );
       })}
     </div>
   );
-}
+};
 
 export default memo(Pagination);

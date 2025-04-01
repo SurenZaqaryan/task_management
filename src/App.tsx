@@ -3,8 +3,9 @@ import Home from './pages/Home/Home';
 import PublicRoute from './components/PublicRoute/PublicRoute';
 import Dashboard from './pages/Dashboard/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import { FC } from 'react';
 
-function App() {
+const App: FC = () => {
   return (
     <BrowserRouter>
       <Routes>
@@ -27,6 +28,6 @@ function App() {
       </Routes>
     </BrowserRouter>
   );
-}
+};
 
 export default App;

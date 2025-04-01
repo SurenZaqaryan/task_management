@@ -1,17 +1,17 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styles from './style.module.css';
-import { RootState } from '../../redux/store';
+import { RootState, useAppDispatch } from '../../redux/store';
 import { logout } from '../../redux/userSlice';
-import { useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { clearTodos } from '../../redux/todosSlice';
 import LogoutModal from '../LogoutModal/LogoutModal';
 import { MdLogout } from 'react-icons/md';
 
-function Header() {
+const Header: FC = () => {
   const { name } = useSelector((state: RootState) => state.user.user);
   const [isLoading, setIsLoading] = useState(false);
-  const dispatch = useDispatch();
   const [isModalActive, setIsModalActive] = useState(false);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -49,6 +49,6 @@ function Header() {
       )}
     </>
   );
-}
+};
 
 export default Header;

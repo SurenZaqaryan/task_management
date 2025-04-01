@@ -1,16 +1,15 @@
 import { IoMdClose } from 'react-icons/io';
 import styles from './style.module.css';
 import { BarLoader } from 'react-spinners';
+import { FC } from 'react';
 
-function LogoutModal({
-  setIsModalActive,
-  handleLogout,
-  isLoading,
-}: {
+type ModalProps = {
   handleLogout: () => void;
   setIsModalActive: (value: boolean) => void;
   isLoading: boolean;
-}) {
+};
+
+const LogoutModal: FC<ModalProps> = ({ setIsModalActive, handleLogout, isLoading }) => {
   return (
     <div className={styles.container} onClick={() => setIsModalActive(false)}>
       <div className={styles.wrapper} onClick={(e) => e.stopPropagation()}>
@@ -44,6 +43,6 @@ function LogoutModal({
       </div>
     </div>
   );
-}
+};
 
 export default LogoutModal;

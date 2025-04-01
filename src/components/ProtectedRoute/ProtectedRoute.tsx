@@ -1,9 +1,14 @@
 import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import { FC, ReactNode } from 'react';
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const isAuth = useSelector((state: RootState) => state.user.isAuthenticated);
+type ProtectedRouteProps = {
+  children: ReactNode;
+};
+
+const ProtectedRoute: FC<ProtectedRouteProps> = ({ children }) => {
+  const { isAuthenticated: isAuth } = useSelector((state: RootState) => state.user);
   return isAuth ? children : <Navigate to="/" />;
 };
 

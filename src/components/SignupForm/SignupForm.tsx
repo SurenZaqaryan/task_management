@@ -5,11 +5,11 @@ import { validateConfirmedPassword } from '../../helpers/validateConfirmedPasswo
 import { signup } from '../../redux/userSlice';
 import { v4 as uuidv4 } from 'uuid';
 import styles from './style.module.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
+import { useSelector } from 'react-redux';
+import { RootState, useAppDispatch } from '../../redux/store';
 
 function SignupForm() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

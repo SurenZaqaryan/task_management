@@ -1,8 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const loadState = () => {
   const currentUser = sessionStorage.getItem('currentUser');
-
   const parsedCurrentUser = currentUser ? JSON.parse(currentUser) : null;
 
   if (parsedCurrentUser) {
@@ -12,29 +11,31 @@ const loadState = () => {
       error: '',
     };
   } else {
-    return null;
+    return {
+      user: null,
+      isAuthenticated: false,
+      error: '',
+    };
   }
 };
 
-const initialState = loadState() || {
-  user: null,
-  isAuthenticated: false,
-  error: '',
+type User = {
+  name: string;
+  email: string;
+  password: string;
+  id: string;
 };
 
 export const userSlice = createSlice({
   name: 'user',
-  initialState,
+  initialState: loadState(),
   reducers: {
     // signup
-    signup(state, action) {
+    signup(state, action: PayloadAction<User>) {
       const { payload: user } = action;
       const { name, email, id } = user;
-
-      // signup
       const users: User[] = JSON.parse(localStorage.getItem('users') || '[]') as User[];
 
-      // @ts-ignore
       if (users.find((user) => user.email === email)) {
         state.error = 'A user with this email is already registered.';
         return;
@@ -43,8 +44,6 @@ export const userSlice = createSlice({
       users.push(user);
       localStorage.setItem('users', JSON.stringify(users));
 
-      // login
-
       state.user = { name, email, id };
       state.isAuthenticated = true;
       state.error = '';
@@ -52,10 +51,9 @@ export const userSlice = createSlice({
     },
 
     // login
-    login(state, action) {
+    login(state, action: PayloadAction<{ email: string; password: string }>) {
       const { email, password } = action.payload;
       const users: User[] = JSON.parse(localStorage.getItem('users') || '[]') as User[];
-
       const user = users.find((user) => user.email === email);
 
       if (!user) {
@@ -91,13 +89,6 @@ export const userSlice = createSlice({
     },
   },
 });
-
-type User = {
-  name: string;
-  email: string;
-  password: string;
-  id: string;
-};
 
 export default userSlice.reducer;
 export const { signup, logout, login, removeErrors } = userSlice.actions;

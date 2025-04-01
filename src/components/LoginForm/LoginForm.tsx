@@ -1,12 +1,12 @@
-import { useCallback, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import styles from './style.module.css';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { login, removeErrors } from '../../redux/userSlice';
-import { RootState } from '../../redux/store';
+import { RootState, useAppDispatch } from '../../redux/store';
 import { MdOutlineVisibilityOff, MdOutlineVisibility } from 'react-icons/md';
 
-function LoginForm() {
-  const dispatch = useDispatch();
+const LoginForm: FC = () => {
+  const dispatch = useAppDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -15,7 +15,7 @@ function LoginForm() {
   const { error: errorFromStore } = useSelector((state: RootState) => state.user);
 
   const handleLogin = useCallback(
-    (e: React.FormEvent) => {
+    (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setIsLoading(true);
 
@@ -108,6 +108,6 @@ function LoginForm() {
       {errorFromStore && <h2 className={styles.error_message}>{errorFromStore}</h2>}
     </form>
   );
-}
+};
 
 export default LoginForm;

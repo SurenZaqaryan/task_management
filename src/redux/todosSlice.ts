@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type Todo = {
   id: string;
@@ -19,7 +19,8 @@ export const todosSlice = createSlice({
   name: 'todos',
   initialState,
   reducers: {
-    addTodo(state, action) {
+    // add todo
+    addTodo(state, action: PayloadAction<{ id: string; name: string; userID: string }>) {
       const { id, name, userID } = action.payload;
       const todo = { id, name, userID, isCompleted: false };
       state.todos.push(todo);
@@ -27,7 +28,8 @@ export const todosSlice = createSlice({
       localStorage.setItem('todos', JSON.stringify([...todos, todo]));
     },
 
-    deleteTodo(state, action) {
+    // delete todo
+    deleteTodo(state, action: PayloadAction<{ id: string }>) {
       state.todos = state.todos.filter((todo) => todo.id !== action.payload.id);
       const todos: Todo[] = JSON.parse(localStorage.getItem('todos') || '[]') as Todo[];
       localStorage.setItem(
@@ -36,7 +38,8 @@ export const todosSlice = createSlice({
       );
     },
 
-    changeTodo(state, action) {
+    // change todo (name)
+    changeTodo(state, action: PayloadAction<{ id: string; newName: string }>) {
       const { id, newName } = action.payload;
       state.todos = state.todos.map((todo) => {
         if (todo.id === id) {
@@ -61,7 +64,8 @@ export const todosSlice = createSlice({
       );
     },
 
-    toggleIsCompleted(state, action) {
+    // toggle is completed
+    toggleIsCompleted(state, action: PayloadAction<{ id: string }>) {
       state.todos = state.todos.map((todo) => {
         if (todo.id === action.payload.id) {
           return {
@@ -90,7 +94,8 @@ export const todosSlice = createSlice({
       );
     },
 
-    getTodos(state, action) {
+    // get todos
+    getTodos(state, action: PayloadAction<{ userID: string; query?: string }>) {
       const { userID, query } = action.payload;
       const savedTodos = localStorage.getItem('todos');
       const parsedTodos: Todo[] = savedTodos ? JSON.parse(savedTodos) : [];
@@ -106,6 +111,7 @@ export const todosSlice = createSlice({
       state.todos = currentUserTodos;
     },
 
+    // clear todos
     clearTodos(state) {
       state.todos = [];
     },

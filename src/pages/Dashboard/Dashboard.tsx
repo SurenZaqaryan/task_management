@@ -1,9 +1,10 @@
+import { FC } from 'react';
 import AddTodoForm from '../../components/AddTodoForm/AddTodoForm';
 import Header from '../../components/Header/Header';
 import TodosList from '../../components/TodosList/TodosList';
 import styles from './style.module.css';
 
-function Dashboard() {
+const Dashboard: FC = () => {
   return (
     <>
       <Header />
@@ -13,6 +14,6 @@ function Dashboard() {
       </div>
     </>
   );
-}
+};
 
 export default Dashboard;
