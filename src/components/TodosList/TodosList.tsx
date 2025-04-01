@@ -67,15 +67,17 @@ const TodosList: FC = () => {
   }, []);
 
   const filteredTodos = useMemo(() => {
-    return todos.filter((todo) => {
-      if (tab === 'all') {
-        return true;
-      } else if (tab === 'active') {
-        return todo.isCompleted === false;
-      } else {
-        return todo.isCompleted === true;
-      }
-    });
+    return todos
+      .filter((todo) => {
+        if (tab === 'all') {
+          return true;
+        } else if (tab === 'active') {
+          return todo.isCompleted === false;
+        } else {
+          return todo.isCompleted === true;
+        }
+      })
+      .reverse();
   }, [todos, tab]);
 
   const startIndex = (activePage - 1) * GROUP_SIZE;
